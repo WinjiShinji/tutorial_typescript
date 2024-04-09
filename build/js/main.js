@@ -1,8 +1,15 @@
 "use strict";
-let username = "Dave";
-console.log(username);
-let a = 12;
-let b = 6;
-let c = 2;
-console.log(a / b);
-console.log(c * b);
+let myName = "Dave";
+let meaningOfLife;
+let isLoading;
+let album; // any data type, overrides ts
+let postId; // union data type, multiple types
+let isActive;
+let re = /\w+/g; // regex data type
+myName = "John";
+meaningOfLife = 42;
+isLoading = true;
+album = 1984;
+const sum = (a, b) => {
+    return a + b;
+};

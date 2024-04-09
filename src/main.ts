@@ -1,10 +1,16 @@
-let username = "Dave"
-console.log(username)
+let myName: string = "Dave"
+let meaningOfLife: number
+let isLoading: boolean
+let album: any // any data type, overrides ts
+let postId: string | number // union data type, multiple types
+let isActive: number | boolean | string
+let re: RegExp = /\w+/g // regex data type
 
-let a: number = 12
-let b: number = 6
-let c: number = 2
+myName = "John"
+meaningOfLife = 42
+isLoading = true
+album = 1984
 
-console.log(a / b)
-
-console.log(c * b)
+const sum = (a: number, b: number) => {
+  return a + b
+}
