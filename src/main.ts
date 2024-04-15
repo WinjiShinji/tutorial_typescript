@@ -1,91 +1,38 @@
-let stringArr = ["one", "hey", "Dave"]
-let guitars = ["Strat", "les Paul", 5150]
-let mixedData = ["evh", 1984, true]
+type One = string
+type Two = string | number
+type Three = "hello"
 
-stringArr[0] = "john"
-stringArr.push("hey")
+// convert to more or less specific
+let a: One = "hello"
+let b = a as Two // less specific
+let c = a as Three // more specific
 
-guitars[0] = 1984
-guitars.unshift("Jim")
+let d = <One>"world"
+let e = <string | number>"world"
 
-guitars = stringArr
-mixedData = guitars
-
-let test = [] // any
-let bands: string[] = [] // data type string array
-bands.push("Van Halen")
-
-// Tuple
-let myTuple: [string, number, boolean] = ["Dave", 42, true] // tuple = template
-
-let mixed = ["John", 21, false]
-myTuple[1] = 42
-
-// Objects
-let myObj: object
-
-myObj = []
-console.log(typeof myObj) // object type
-myObj = bands
-myObj = {}
-
-const exampleObj = {
-  prop1: "Dave",
-  prop2: true,
+const addOrConcat = (
+  a: number,
+  b: number,
+  c: "add" | "concat"
+): number | string => {
+  if (c === "add") return a + b
+  return "" + a + b
 }
 
-exampleObj.prop1 = "John"
+let myVal: string = addOrConcat(2, 2, "concat") as string // assertion
 
-type Guitarist = {
-  // type = object template
-  name?: string
-  active: boolean // ? before : optional undefined
-  albums: (string | number)[] // union type (|) and array []
-}
+// Be careful!  TS sees no problem - but a string is returned
+let nextVal: number = addOrConcat(2, 2, "concat") as number // assertion
 
-// Alternate template
-// interface Guitarist {
-//   // type = object template
-//   name: string
-//   active?: boolean // ? before : optional undefined
-//   albums: (string | number)[] // union type (|) and array []
-// }
+// 10 as string // incorrect assertion
+10 as unknown as string // double casting | two assertions
 
-let evh: Guitarist = {
-  // type added to object from type template
-  name: "Eddie",
-  active: false,
-  albums: [1984, 5150, "OU812"],
-}
+// The DOM
+const img = document.querySelector("img") as HTMLImageElement
+// const img = document.querySelector('img')! // ! = not null
+const myImg = document.getElementById("#img") as HTMLImageElement
+const nextImg = <HTMLImageElement>document.getElementById("#img")
+// ^ alternate way <> - does not work with React .tsx
 
-let jp: Guitarist = {
-  // type added to object from type template
-  name: "Jimmy",
-  active: true,
-  albums: ["I", "II", "IV"],
-}
-evh = jp
-
-// Function
-const greetGuitarist = (guitarist: Guitarist) => {
-  // parameter type
-  if (guitarist.name) {
-    // narrowing
-    return `Hello ${guitarist.name?.toUpperCase()}!` // ? possible undefined
-  }
-  return "Hello!"
-}
-console.log(greetGuitarist(jp))
-
-// Enums
-// "Unlike most TypeScript features, Enums are not a type-level addition to JavaScript but something added to the language and runtime."
-
-enum Grade {
-  U = 1,
-  D,
-  C,
-  B,
-  A, // = 5
-}
-
-console.log(Grade.A) // = 5
+img.src
+myImg.src
