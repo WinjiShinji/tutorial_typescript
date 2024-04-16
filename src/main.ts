@@ -1,4 +1,5 @@
 // ---- Basics ---- //
+
 let myName: string = "Dave"
 let meaningOfLife: number
 let isLoading: boolean
@@ -18,6 +19,7 @@ const sum = (a: number, b: number) => {
 ///////////////////////////////////////////////////////////////////////
 
 // ---- Tuples, Objects, Functions, Enums ---- //
+
 let stringArr = ["one", "hey", "Dave"]
 let guitars = ["Strat", "les Paul", 5150]
 let mixedData = ["evh", 1984, true]
@@ -45,9 +47,10 @@ myTuple[1] = 42
 let myObj: object
 
 myObj = []
-console.log(typeof myObj) // object type
+// console.log(typeof myObj) // object type
 myObj = bands
 myObj = {}
+// console.log(typeof myObj) // object type
 
 const exampleObj = {
   prop1: "Dave",
@@ -56,30 +59,29 @@ const exampleObj = {
 
 exampleObj.prop1 = "John"
 
+// type = object template
 type GuitaristA = {
-  // type = object template
   name?: string
   active: boolean // ? before : optional undefined
   albums: (string | number)[] // union type (|) and array []
 }
 
-// Alternate template
-// interface Guitarist {
-//   // type = object template
-//   name: string
-//   active?: boolean // ? before : optional undefined
-//   albums: (string | number)[] // union type (|) and array []
-// }
+// interface = object template (alternative)
+interface GuitaristB {
+  name: string
+  active?: boolean // ? before : optional undefined
+  albums: (string | number)[] // union type (|) and array []
+}
 
+// type added to object from type template
 let evh: GuitaristA = {
-  // type added to object from type template
   name: "Eddie",
   active: false,
   albums: [1984, 5150, "OU812"],
 }
 
+// type added to object from type template
 let jp: GuitaristA = {
-  // type added to object from type template
   name: "Jimmy",
   active: true,
   albums: ["I", "II", "IV"],
@@ -95,7 +97,7 @@ const greetGuitarist = (guitarist: GuitaristA) => {
   }
   return "Hello!"
 }
-console.log(greetGuitarist(jp))
+// console.log(greetGuitarist(jp))
 
 // Enums //
 // "Unlike most TypeScript features, Enums are not a type-level addition to JavaScript but something added to the language and runtime."
@@ -106,10 +108,11 @@ enum Grade {
   B,
   A, // = 5
 }
-console.log(Grade.A) // = 5
+// console.log(Grade.A) // = 5
 ///////////////////////////////////////////////////////////////////////////
 
 // ---- Type Assertions | Type Casting ---- //
+
 // Original JS code //
 // const year = document.getElementById("year")
 // const thisYear = new Date().getFullYear()
@@ -140,6 +143,7 @@ year.textContent = thisYear
 ///////////////////////////////////////////////////////////////////////////
 
 //  ---- CLASSES ---- //
+
 // Default //
 // class Coder {
 //   name: string
@@ -162,7 +166,7 @@ year.textContent = thisYear
 
 // Class with visible modifiers //
 class Coder {
-  secondLang!: string // not initialized
+  secondLang!: string // not initialized = !
 
   constructor(
     public readonly name: string, 
@@ -181,7 +185,7 @@ class Coder {
   }
 }
 const Dave = new Coder('Dave', 'Rock', 42)
-console.log(Dave.getAge())
+// console.log(Dave.getAge())
 // console.log(Dave.age) // private - only accessible within class
 // console.log(Dave.lang) // protected - only accessible within class
 // @NOTE: ^ still legal JS - still have access to values in console!
@@ -203,8 +207,8 @@ class WebDev extends Coder {
   }
 }
 const Sara = new WebDev('Mac', 'Sara', 'Lofi', 25)
-console.log(Sara.getLang())
-console.log(Sara.getAge())
+// console.log(Sara.getLang())
+// console.log(Sara.getAge())
 // console.log(Sara.age) // private - only accessible within class
 // console.log(Sara.lang) // protected - only accessible within class
 // @NOTE: ^ still legal JS - still have access to values in console!
@@ -229,7 +233,7 @@ class Guitarist implements Musician {
   }
 }
 const Page = new Guitarist('Jimmy', 'guitar')
-console.log(Page.play('strums'))
+// console.log(Page.play('strums'))
 
 // Static Class //
 class Peeps {
@@ -248,10 +252,10 @@ const John = new Peeps('John')
 const Steve = new Peeps('Steve')
 const Amy = new Peeps('Amy')
 
-console.log('Amy ID: ',Amy.id)
-console.log('Steve ID: ',Steve.id)
-console.log('John ID: ',John.id)
-console.log('Total: ',Peeps.count)
+// console.log('Amy ID: ',Amy.id)
+// console.log('Steve ID: ',Steve.id)
+// console.log('John ID: ',John.id)
+// console.log('Total: ',Peeps.count)
 
 // Class - Getters & Setters //
 class Bands {
@@ -275,8 +279,110 @@ class Bands {
 
 const myBands = new Bands()
 myBands.data = ['Neil Young', 'Led Zep']
-console.log(myBands.data)
+// console.log(myBands.data)
 myBands.data = [...myBands.data, 'ZZ Tops']
-console.log(myBands.data)
+// console.log(myBands.data)
 /////////////////////////////////////////////////////////////////////////////
 
+// ---- Index Signatures & keyof Assertions ---- //
+
+// Index Signatures //
+
+// interface without index:
+// interface TransactionObj {
+//   Pizza: number,
+//   Books: number,
+//   Job: number
+// }
+
+// interface with index:
+// interface TransactionObj {
+//   // key:value|string:number
+//   readonly [index: string]: number // index signature
+// }
+
+// interface with index & properties
+interface TransactionObj {
+  readonly [index: string]: number
+  Pizza: number,
+  Books: number,
+  Job: number
+}
+
+const todaysTransactions: TransactionObj = {
+  Pizza: -10,
+  Books: -5,
+  Job: 50
+}
+
+// console.log(todaysTransactions.Pizza) // Ok
+// console.log(todaysTransactions['Pizza']) // Ok
+
+let prop: string = 'Pizza'
+// console.log(todaysTransactions[prop]) // Not Ok - no index signature
+
+const todaysNet = (transactions: TransactionObj): number => {
+  let total = 0
+  for (const transaction in transactions) {
+    total += transactions[transaction] // Not Ok - no index signature
+  }
+  return total
+}
+// console.log(todaysNet(todaysTransactions))
+// todaysTransactions.Pizza = 40 // Readonly
+// console.log(todaysTransactions['Dave']) // undefined - no TS error!
+
+// keyof Assertions //
+interface Student {
+  // [key: string]: string | number | number[] | undefined
+  name: string
+  GPA: number
+  classes?: number[]
+}
+
+const student: Student =  {
+  name: "Doug",
+  GPA: 3.5,
+  classes: [100,200]
+}
+// console.log(student.test) // undefined
+
+// for (const  key in student) {
+//   console.log(`${key}: ${student[key]}`)
+// }
+
+// for (const  key in student) {
+//   console.log(`${key}: ${student[key as keyof Student]}`)
+// }
+
+
+// Object.keys(student).map(key => {
+//   console.log(student[key as keyof typeof student])
+// })
+
+const logStudentKey = (student: Student, key: keyof Student): void => {
+  console.log(`Student ${key}: ${student[key]}`)
+}
+// logStudentKey(student, 'GPA')
+// @NOTE: keyof creates union type of object keys
+
+// Utility type Record //
+// interface Incomes {
+//   [key: string]: number
+// }
+
+type  Streams = 'salary' | 'bonus' | 'side'
+type Incomes = Record<Streams,number>
+
+const monthlyIncomes: Incomes = {
+  salary: 500,
+  bonus: 100,
+  side: 250
+}
+
+for (const revenue in monthlyIncomes) {
+  console.log(monthlyIncomes[revenue as keyof Incomes])
+}
+//////////////////////////////////////////////////////////////////
+
+// ---- TS Generics ---- //

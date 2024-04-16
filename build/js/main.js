@@ -1,4 +1,111 @@
 "use strict";
+// ---- Basics ---- //
+let myName = "Dave";
+let meaningOfLife;
+let isLoading;
+let album; // any data type, overrides ts
+let postId; // union data type, multiple types
+let isActive;
+let re = /\w+/g; // regex data type
+myName = "John";
+meaningOfLife = 42;
+isLoading = true;
+album = 1984;
+const sum = (a, b) => {
+    return a + b;
+};
+///////////////////////////////////////////////////////////////////////
+// ---- Tuples, Objects, Functions, Enums ---- //
+let stringArr = ["one", "hey", "Dave"];
+let guitars = ["Strat", "les Paul", 5150];
+let mixedData = ["evh", 1984, true];
+stringArr[0] = "john";
+stringArr.push("hey");
+guitars[0] = 1984;
+guitars.unshift("Jim");
+guitars = stringArr;
+mixedData = guitars;
+let test = []; // any
+let bands = []; // data type string array
+bands.push("Van Halen");
+// Tuple //
+let myTuple = ["Dave", 42, true]; // tuple = template
+let mixed = ["John", 21, false];
+myTuple[1] = 42;
+// Objects  //
+let myObj;
+myObj = [];
+// console.log(typeof myObj) // object type
+myObj = bands;
+myObj = {};
+// console.log(typeof myObj) // object type
+const exampleObj = {
+    prop1: "Dave",
+    prop2: true,
+};
+exampleObj.prop1 = "John";
+// type added to object from type template
+let evh = {
+    name: "Eddie",
+    active: false,
+    albums: [1984, 5150, "OU812"],
+};
+// type added to object from type template
+let jp = {
+    name: "Jimmy",
+    active: true,
+    albums: ["I", "II", "IV"],
+};
+evh = jp;
+// Functions //
+const greetGuitarist = (guitarist) => {
+    var _a;
+    // parameter type
+    if (guitarist.name) {
+        // narrowing
+        return `Hello ${(_a = guitarist.name) === null || _a === void 0 ? void 0 : _a.toUpperCase()}!`; // ? possible undefined
+    }
+    return "Hello!";
+};
+// console.log(greetGuitarist(jp))
+// Enums //
+// "Unlike most TypeScript features, Enums are not a type-level addition to JavaScript but something added to the language and runtime."
+var Grade;
+(function (Grade) {
+    Grade[Grade["U"] = 1] = "U";
+    Grade[Grade["D"] = 2] = "D";
+    Grade[Grade["C"] = 3] = "C";
+    Grade[Grade["B"] = 4] = "B";
+    Grade[Grade["A"] = 5] = "A";
+})(Grade || (Grade = {}));
+// console.log(Grade.A) // = 5
+///////////////////////////////////////////////////////////////////////////
+// ---- Type Assertions | Type Casting ---- //
+// Original JS code //
+// const year = document.getElementById("year")
+// const thisYear = new Date().getFullYear()
+// year.setAttribute("datetime", thisYear)
+// year.textContent = thisYear
+// My Solution TS code //
+// const year = document.getElementById("year")!
+// const thisYear: number = new Date().getFullYear()
+// year.setAttribute("datetime", thisYear.toString())
+// year.textContent = (thisYear as unknown) as string
+// 1st variation //
+// let year: HTMLElement | null
+// year = document.getElementById("year")
+// let thisYear: string
+// thisYear = new Date().getFullYear().toString()
+// if (year) {
+//   year.setAttribute("datetime", thisYear)
+//   year.textContent = thisYear
+// }
+// 2nd variation //
+const year = document.getElementById("year");
+const thisYear = new Date().getFullYear().toString();
+year.setAttribute("datetime", thisYear);
+year.textContent = thisYear;
+///////////////////////////////////////////////////////////////////////////
 //  ---- CLASSES ---- //
 // Default //
 // class Coder {
@@ -38,11 +145,10 @@ class Coder {
     }
 }
 const Dave = new Coder('Dave', 'Rock', 42);
-console.log(Dave.getAge());
+// console.log(Dave.getAge())
 // console.log(Dave.age) // private - only accessible within class
 // console.log(Dave.lang) // protected - only accessible within class
 // @NOTE: ^ still legal JS - still have access to values in console!
-////////////////////////////////////////////////////////////////////////
 // Class Extends //
 class WebDev extends Coder {
     constructor(computer, name, music, age) {
@@ -55,8 +161,6 @@ class WebDev extends Coder {
     }
 }
 const Sara = new WebDev('Mac', 'Sara', 'Lofi', 25);
-console.log(Sara.getLang());
-console.log(Sara.getAge());
 class Guitarist {
     constructor(name, instrument) {
         this.name = name;
@@ -67,8 +171,7 @@ class Guitarist {
     }
 }
 const Page = new Guitarist('Jimmy', 'guitar');
-console.log(Page.play('strums'));
-/////////////////////////////////////////////////////////////////////
+// console.log(Page.play('strums'))
 // Static Class //
 class Peeps {
     static getCount() {
@@ -84,11 +187,10 @@ Peeps.count = 0;
 const John = new Peeps('John');
 const Steve = new Peeps('Steve');
 const Amy = new Peeps('Amy');
-console.log('Amy ID: ', Amy.id);
-console.log('Steve ID: ', Steve.id);
-console.log('John ID: ', John.id);
-console.log('Total: ', Peeps.count);
-////////////////////////////////////////////////////////////////////
+// console.log('Amy ID: ',Amy.id)
+// console.log('Steve ID: ',Steve.id)
+// console.log('John ID: ',John.id)
+// console.log('Total: ',Peeps.count)
 // Class - Getters & Setters //
 class Bands {
     constructor() {
@@ -108,6 +210,49 @@ class Bands {
 }
 const myBands = new Bands();
 myBands.data = ['Neil Young', 'Led Zep'];
-console.log(myBands.data);
+// console.log(myBands.data)
 myBands.data = [...myBands.data, 'ZZ Tops'];
-console.log(myBands.data);
+const todaysTransactions = {
+    Pizza: -10,
+    Books: -5,
+    Job: 50
+};
+// console.log(todaysTransactions.Pizza) // Ok
+// console.log(todaysTransactions['Pizza']) // Ok
+let prop = 'Pizza';
+// console.log(todaysTransactions[prop]) // Not Ok - no index signature
+const todaysNet = (transactions) => {
+    let total = 0;
+    for (const transaction in transactions) {
+        total += transactions[transaction]; // Not Ok - no index signature
+    }
+    return total;
+};
+const student = {
+    name: "Doug",
+    GPA: 3.5,
+    classes: [100, 200]
+};
+// console.log(student.test) // undefined
+// for (const  key in student) {
+//   console.log(`${key}: ${student[key]}`)
+// }
+// for (const  key in student) {
+//   console.log(`${key}: ${student[key as keyof Student]}`)
+// }
+// Object.keys(student).map(key => {
+//   console.log(student[key as keyof typeof student])
+// })
+const logStudentKey = (student, key) => {
+    console.log(`Student ${key}: ${student[key]}`);
+};
+const monthlyIncomes = {
+    salary: 500,
+    bonus: 100,
+    side: 250
+};
+for (const revenue in monthlyIncomes) {
+    console.log(monthlyIncomes[revenue]);
+}
+//////////////////////////////////////////////////////////////////
+// ---- TS Generics ---- //
