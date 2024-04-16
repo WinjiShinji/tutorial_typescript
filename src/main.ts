@@ -1,5 +1,145 @@
-//  ---- CLASSES ---- //
+// ---- Basics ---- //
+let myName: string = "Dave"
+let meaningOfLife: number
+let isLoading: boolean
+let album: any // any data type, overrides ts
+let postId: string | number // union data type, multiple types
+let isActive: number | boolean | string
+let re: RegExp = /\w+/g // regex data type
 
+myName = "John"
+meaningOfLife = 42
+isLoading = true
+album = 1984
+
+const sum = (a: number, b: number) => {
+  return a + b
+}
+///////////////////////////////////////////////////////////////////////
+
+// ---- Tuples, Objects, Functions, Enums ---- //
+let stringArr = ["one", "hey", "Dave"]
+let guitars = ["Strat", "les Paul", 5150]
+let mixedData = ["evh", 1984, true]
+
+stringArr[0] = "john"
+stringArr.push("hey")
+
+guitars[0] = 1984
+guitars.unshift("Jim")
+
+guitars = stringArr
+mixedData = guitars
+
+let test = [] // any
+let bands: string[] = [] // data type string array
+bands.push("Van Halen")
+
+// Tuple //
+let myTuple: [string, number, boolean] = ["Dave", 42, true] // tuple = template
+
+let mixed = ["John", 21, false]
+myTuple[1] = 42
+
+// Objects  //
+let myObj: object
+
+myObj = []
+console.log(typeof myObj) // object type
+myObj = bands
+myObj = {}
+
+const exampleObj = {
+  prop1: "Dave",
+  prop2: true,
+}
+
+exampleObj.prop1 = "John"
+
+type GuitaristA = {
+  // type = object template
+  name?: string
+  active: boolean // ? before : optional undefined
+  albums: (string | number)[] // union type (|) and array []
+}
+
+// Alternate template
+// interface Guitarist {
+//   // type = object template
+//   name: string
+//   active?: boolean // ? before : optional undefined
+//   albums: (string | number)[] // union type (|) and array []
+// }
+
+let evh: GuitaristA = {
+  // type added to object from type template
+  name: "Eddie",
+  active: false,
+  albums: [1984, 5150, "OU812"],
+}
+
+let jp: GuitaristA = {
+  // type added to object from type template
+  name: "Jimmy",
+  active: true,
+  albums: ["I", "II", "IV"],
+}
+evh = jp
+
+// Functions //
+const greetGuitarist = (guitarist: GuitaristA) => {
+  // parameter type
+  if (guitarist.name) {
+    // narrowing
+    return `Hello ${guitarist.name?.toUpperCase()}!` // ? possible undefined
+  }
+  return "Hello!"
+}
+console.log(greetGuitarist(jp))
+
+// Enums //
+// "Unlike most TypeScript features, Enums are not a type-level addition to JavaScript but something added to the language and runtime."
+enum Grade {
+  U = 1,
+  D,
+  C,
+  B,
+  A, // = 5
+}
+console.log(Grade.A) // = 5
+///////////////////////////////////////////////////////////////////////////
+
+// ---- Type Assertions | Type Casting ---- //
+// Original JS code //
+// const year = document.getElementById("year")
+// const thisYear = new Date().getFullYear()
+// year.setAttribute("datetime", thisYear)
+// year.textContent = thisYear
+
+// My Solution TS code //
+// const year = document.getElementById("year")!
+// const thisYear: number = new Date().getFullYear()
+// year.setAttribute("datetime", thisYear.toString())
+// year.textContent = (thisYear as unknown) as string
+
+// 1st variation //
+// let year: HTMLElement | null
+// year = document.getElementById("year")
+// let thisYear: string
+// thisYear = new Date().getFullYear().toString()
+// if (year) {
+//   year.setAttribute("datetime", thisYear)
+//   year.textContent = thisYear
+// }
+
+// 2nd variation //
+const year = document.getElementById("year") as HTMLSpanElement
+const thisYear: string = new Date().getFullYear().toString()
+year.setAttribute("datetime", thisYear)
+year.textContent = thisYear
+///////////////////////////////////////////////////////////////////////////
+
+//  ---- CLASSES ---- //
 // Default //
 // class Coder {
 //   name: string
@@ -45,7 +185,6 @@ console.log(Dave.getAge())
 // console.log(Dave.age) // private - only accessible within class
 // console.log(Dave.lang) // protected - only accessible within class
 // @NOTE: ^ still legal JS - still have access to values in console!
-////////////////////////////////////////////////////////////////////////
 
 // Class Extends //
 class WebDev extends Coder {
@@ -69,7 +208,6 @@ console.log(Sara.getAge())
 // console.log(Sara.age) // private - only accessible within class
 // console.log(Sara.lang) // protected - only accessible within class
 // @NOTE: ^ still legal JS - still have access to values in console!
-///////////////////////////////////////////////////////////////////////
 
 // Class implements Interface //
 interface Musician {
@@ -92,7 +230,6 @@ class Guitarist implements Musician {
 }
 const Page = new Guitarist('Jimmy', 'guitar')
 console.log(Page.play('strums'))
-/////////////////////////////////////////////////////////////////////
 
 // Static Class //
 class Peeps {
@@ -115,7 +252,6 @@ console.log('Amy ID: ',Amy.id)
 console.log('Steve ID: ',Steve.id)
 console.log('John ID: ',John.id)
 console.log('Total: ',Peeps.count)
-////////////////////////////////////////////////////////////////////
 
 // Class - Getters & Setters //
 class Bands {
@@ -142,3 +278,5 @@ myBands.data = ['Neil Young', 'Led Zep']
 console.log(myBands.data)
 myBands.data = [...myBands.data, 'ZZ Tops']
 console.log(myBands.data)
+/////////////////////////////////////////////////////////////////////////////
+
