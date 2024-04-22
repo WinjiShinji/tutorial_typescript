@@ -120,7 +120,7 @@ enum Grade {
 // year.textContent = thisYear
 
 // My Solution TS code //
-// const year = document.getElementById("year")!
+// const year = document.getElementById("year")! // ! = not null
 // const thisYear: number = new Date().getFullYear()
 // year.setAttribute("datetime", thisYear.toString())
 // year.textContent = (thisYear as unknown) as string
@@ -136,10 +136,10 @@ enum Grade {
 // }
 
 // 2nd variation //
-const year = document.getElementById("year") as HTMLSpanElement
-const thisYear: string = new Date().getFullYear().toString()
-year.setAttribute("datetime", thisYear)
-year.textContent = thisYear
+// const year = document.getElementById("year") as HTMLSpanElement
+// const thisYear: string = new Date().getFullYear().toString()
+// year.setAttribute("datetime", thisYear)
+// year.textContent = thisYear
 ///////////////////////////////////////////////////////////////////////////
 
 //  ---- CLASSES ---- //
@@ -380,9 +380,132 @@ const monthlyIncomes: Incomes = {
   side: 250
 }
 
-for (const revenue in monthlyIncomes) {
-  console.log(monthlyIncomes[revenue as keyof Incomes])
-}
+// for (const revenue in monthlyIncomes) {
+//   console.log(monthlyIncomes[revenue as keyof Incomes])
+// }
 //////////////////////////////////////////////////////////////////
 
 // ---- TS Generics ---- //
+
+const stringEcho = (arg: string): string => arg
+
+// Utility <> //
+const echo = <T>(arg: T): T => arg // type variable - generic
+
+const isObj = <T>(arg: T): boolean => {
+  return (typeof arg === 'object' && !Array.isArray(arg) && arg !== null)
+}
+// types
+// console.log(isObj(true)) // false
+// console.log(isObj('john')) // false
+// console.log(isObj([1,2,3])) // false
+// console.log(isObj({ name: 'John' })) // true
+// console.log(isObj(null)) // false
+
+// isTrue function without interface //
+// const isTrue = <T>(arg: T): { arg: T, is: boolean } => {
+//   if (Array.isArray(arg) && !arg.length) {
+//     return { arg, is: false }
+//   }
+//   if (isObj(arg) && !Object.keys(arg as keyof T).length) {
+//     return { arg, is: false }
+//   }
+//   return { arg, is: !!arg } // !!double bang :)
+// }
+// // type check
+// console.log(isTrue(false)) // false
+// console.log(isTrue(0)) // false
+// console.log(isTrue(true)) // true
+// console.log(isTrue(1)) // true
+// console.log(isTrue('Dave')) // true
+// console.log(isTrue('')) // false
+// console.log(isTrue(null)) // false
+// console.log(isTrue(undefined)) // false
+// console.log(isTrue({})) // false
+// console.log(isTrue([])) // false
+// console.log(isTrue({ name: 'dave' })) // true
+// console.log(isTrue([1,2,3])) // true
+// console.log(isTrue(NaN)) // false
+
+// isTrue function with interface //
+interface BoolCheck<T> {
+  value: T,
+  is: boolean,
+}
+
+const isTrue = <T>(arg: T): BoolCheck<T> => {
+  if (Array.isArray(arg) && !arg.length) {
+    return { value: arg, is: false }
+  }
+  if (isObj(arg) && !Object.keys(arg as keyof T).length) {
+    return { value: arg, is: false }
+  }
+  return { value: arg, is: !!arg } // !!double bang :)
+}
+// // type check
+// console.log(isTrue(false)) // false
+// console.log(isTrue(0)) // false
+// console.log(isTrue(true)) // true
+// console.log(isTrue(1)) // true
+// console.log(isTrue('Dave')) // true
+// console.log(isTrue('')) // false
+// console.log(isTrue(null)) // false
+// console.log(isTrue(undefined)) // false
+// console.log(isTrue({})) // false
+// console.log(isTrue([])) // false
+// console.log(isTrue({ name: 'dave' })) // true
+// console.log(isTrue([1,2,3])) // true
+// console.log(isTrue(NaN)) // false
+
+// processUser function with extends //
+interface HasID {
+  id: number
+}
+
+const processUser = <T extends HasID>(user: T): T => {
+  // process the user with logic here
+  return user
+}
+// console.log(processUser({ id: 1, name: 'Dave'}))
+
+// Complex extends example //
+const getUsersProp = <T extends HasID, K extends keyof T>(
+  users: T[], key: K): T[K][] => {
+    return users.map(user => user[key])
+  }
+
+const usersArr = [
+  {
+    "id": 1,
+    "name": 'Leanne',
+  },
+  {
+    "id": 2,
+    "name": 'Alice'
+  }
+]
+// console.log(getUsersProp(usersArr, "name"))
+
+// Class generics //
+class StateObj<T> {
+  private data: T
+
+  constructor(value: T) {
+    this.data = value
+  }
+  get state(): T {
+    return this.data
+  }
+
+  set state(value: T) {
+    this.data = value
+  }
+}
+const store = new StateObj("John")
+console.log(store.state)
+store.state = "Dave"
+// store.state = 12
+
+const myState = new StateObj<(string|number|boolean)[]>([15])
+myState.state = (['Dave',54,true])
+// console.log(myState.state)

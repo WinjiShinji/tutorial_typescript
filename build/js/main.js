@@ -87,7 +87,7 @@ var Grade;
 // year.setAttribute("datetime", thisYear)
 // year.textContent = thisYear
 // My Solution TS code //
-// const year = document.getElementById("year")!
+// const year = document.getElementById("year")! // ! = not null
 // const thisYear: number = new Date().getFullYear()
 // year.setAttribute("datetime", thisYear.toString())
 // year.textContent = (thisYear as unknown) as string
@@ -101,10 +101,10 @@ var Grade;
 //   year.textContent = thisYear
 // }
 // 2nd variation //
-const year = document.getElementById("year");
-const thisYear = new Date().getFullYear().toString();
-year.setAttribute("datetime", thisYear);
-year.textContent = thisYear;
+// const year = document.getElementById("year") as HTMLSpanElement
+// const thisYear: string = new Date().getFullYear().toString()
+// year.setAttribute("datetime", thisYear)
+// year.textContent = thisYear
 ///////////////////////////////////////////////////////////////////////////
 //  ---- CLASSES ---- //
 // Default //
@@ -251,8 +251,62 @@ const monthlyIncomes = {
     bonus: 100,
     side: 250
 };
-for (const revenue in monthlyIncomes) {
-    console.log(monthlyIncomes[revenue]);
-}
+// for (const revenue in monthlyIncomes) {
+//   console.log(monthlyIncomes[revenue as keyof Incomes])
+// }
 //////////////////////////////////////////////////////////////////
 // ---- TS Generics ---- //
+const stringEcho = (arg) => arg;
+// Utility <> //
+const echo = (arg) => arg; // type variable - generic
+const isObj = (arg) => {
+    return (typeof arg === 'object' && !Array.isArray(arg) && arg !== null);
+};
+const isTrue = (arg) => {
+    if (Array.isArray(arg) && !arg.length) {
+        return { value: arg, is: false };
+    }
+    if (isObj(arg) && !Object.keys(arg).length) {
+        return { value: arg, is: false };
+    }
+    return { value: arg, is: !!arg }; // !!double bang :)
+};
+const processUser = (user) => {
+    // process the user with logic here
+    return user;
+};
+// console.log(processUser({ id: 1, name: 'Dave'}))
+// Complex extends example //
+const getUsersProp = (users, key) => {
+    return users.map(user => user[key]);
+};
+const usersArr = [
+    {
+        "id": 1,
+        "name": 'Leanne',
+    },
+    {
+        "id": 2,
+        "name": 'Alice'
+    }
+];
+// console.log(getUsersProp(usersArr, "name"))
+// Class generics //
+class StateObj {
+    constructor(value) {
+        this.data = value;
+    }
+    get state() {
+        return this.data;
+    }
+    set state(value) {
+        this.data = value;
+    }
+}
+const store = new StateObj("John");
+console.log(store.state);
+store.state = "Dave";
+// store.state = 12
+const myState = new StateObj([15]);
+myState.state = (['Dave', 54, true]);
+// console.log(myState.state)
